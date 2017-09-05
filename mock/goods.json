@@ -1,0 +1,54 @@
+{
+  "status":"0",
+  "msg":"",
+  "result":[
+    {
+        "productId":"10001",
+        "productName":"梦之城 阿狸大头蓝牙音箱车载便携音响",
+        "prodcutPrice":"139.00",
+        "prodcutImg":"../static/goodimg/g1.jpg"
+    },
+    {
+      "productId":"10002",
+      "productName":"阿狸呓语系列 卡通横款长钱包 女神生日礼物",
+      "prodcutPrice":"89.00",
+      "prodcutImg":"../static/goodimg/g2.jpg"
+    },
+    {
+      "productId":"10003",
+      "productName":"阿狸毛绒公仔 海盗狸",
+      "prodcutPrice":"119.00",
+      "prodcutImg":"../static/goodimg/g3.jpg"
+    },
+    {
+      "productId":"10004",
+      "productName":"阿狸韩版百搭双肩包",
+      "prodcutPrice":"200.00",
+      "prodcutImg":"../static/goodimg/g4.jpg"
+    },
+    {
+      "productId":"10005",
+      "productName":"阿狸九周年斜挎包时尚淑女包",
+      "prodcutPrice":"139.00",
+      "prodcutImg":"../static/goodimg/g5.jpg"
+    },
+    {
+      "productId":"10006",
+      "productName":"阿狸波点斜挎包 夏季必备",
+      "prodcutPrice":"129.00",
+      "prodcutImg":"../static/goodimg/g6.jpg"
+    },
+    {
+      "productId":"10007",
+      "productName":"阿狸恭王府晴雨伞",
+      "prodcutPrice":"89.00",
+      "prodcutImg":"../static/goodimg/g7.jpg"
+    },
+    {
+      "productId":"10008",
+      "productName":"罗小黑 趴姿40cm圆眼半眼动漫周边毛绒公仔",
+      "prodcutPrice":"99.00",
+      "prodcutImg":"../static/goodimg/g8.jpg"
+    }
+  ]
+}
