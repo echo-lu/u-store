@@ -1,27 +1,33 @@
 <template>
   <div id="app">
-    <navbar></navbar>
+    <navbar :shop-number="shopnum" :isLogin="isLogin" v-on:loginCheck="loginCheck" v-on:loginout="loginout"></navbar>
     <div class="filter-nav text-left ">
       <div class="container">
         <div class="sortby-wrapper">
-            <span class="sortby">分类：</span>
-            <a href="javascript:void(0)" class="default">Default</a>
-            <a href="javascript:void(0)" class="price">Price</a>
+            <span class="sortby">类别：</span>
+            <a href="javascript:void(0)"    @click="sortAli('all')" :class="{'cur':sortChecked == 'all'}">全部</a>
+            <a href="javascript:void(0)"  @click="sortAli('ali')"  :class="{'cur':sortChecked == 'ali'}">阿狸</a>
+            <a href="javascript:void(0)" @click="sortAli('black')"  :class="{'cur':sortChecked == 'black'}">罗小黑</a>
         </div>
         <div class="sortby-wrapper" >
           <span class="sortby">价格：</span>
-          <a href="javascript:void(0)"  @click="priceChecked = 'all'" :class="{'cur':priceChecked=='all'}">全部</a>
+          <a href="javascript:void(0)"  @click="priceSort('all')" :class="{'cur':priceChecked=='all'}">全部</a>
           <div class="pricefilter" v-for="(price,index) in priceFilter"  @click="priceChecked = index">
-            <a href="javascript:void(0)"   @click="priceChecked = index" :class="{'cur':priceChecked == index}">{{price.startPrice}} - {{price.endPrice}}</a>
+            <a href="javascript:void(0)"  @click="priceSort(index)" :class="{'cur':priceChecked == index}">{{price.startPrice}} - {{price.endPrice}}</a>
           </div>
-          
         </div> 
+        
       </div>       
     </div>
     <div class="container container-wrapper">
       <div class="goodslist-wrapper container">
+        <div class="sort-by text-right cur-sort">
+        <span class="cur-span">sort by:</span>
+          <a href="javascript:void(0)"  class="cur-def">Default</a>
+            <a href="javascript:void(0)"  @click="sortPrice" >Price<span class="icon-arrow-up2" v-show="pricesort"></span><span class="icon-arrow-down2" v-show="!pricesort"></span></a>
+        </div>
         <div class="row">
-          <div class="col-md-4 col-sm-5" v-for="(item,index) in goodsList">
+          <div class="col-md-4 col-sm-5" v-for="(item,index) in showList">
             <div class="goods" >
               <div class="pic">
                 <a href="#"><img v-lazy="item.prodcutImg" alt=""></a>
@@ -30,7 +36,7 @@
                 <div class="name">{{item.productName}}</div>
                 <div class="price">￥{{item.prodcutPrice}}</div>
                 <div class="btn-area">
-                <a href="javascript:;" class="btn btn-define">加入购物车</a>
+                <a href="javascript:;" class="btn btn-define" @click="add">加入购物车</a>
                 </div>
               </div>          
             </div>
@@ -43,44 +49,140 @@
 </template>
 
 <script>
-import navbar from '../components/navbar'
-import axios from 'axios'
-export default {
-  data() {
-    return {
-      goodsList:[],
-      priceFilter:[
-        {
-          startPrice:'0',
-          endPrice:'100'
-        },
-        {
-          startPrice:'100',
-          endPrice:'500'
-        },
-        {
-          startPrice:'500',
-          endPrice:'1000'
+  import navbar from '../components/navbar'
+  import axios from 'axios'
+  export default {
+    data() {
+      return {
+        goodsList:[],
+        showList:[],
+        priceList:[],
+        priceFilter:[
+          {
+            startPrice:'0',
+            endPrice:'100'
+          },
+          {
+            startPrice:'100',
+            endPrice:'500'
+          },
+          {
+            startPrice:'500',
+            endPrice:'1000'
+          }
+        ],
+        priceChecked:'all',
+        sortChecked:'all',
+        shopnum:0,
+        username:'',
+        pwd:'',
+        isLogin:false,
+        pricesort:false
+      }
+    },
+    components: {
+      navbar
+    },
+    mounted: function() {
+      this.getGoodsList();
+    },
+    methods: {
+      getGoodsList() {
+        axios.get("/goods").then((result)=> {
+          var res = result.data;
+          this.goodsList = res.result;
+        });
+        axios.get("/goods").then((result)=> {
+          var res = result.data;
+          this.priceList = res.result.sort(function(num1,num2) {
+            return num1.prodcutPrice - num2.prodcutPrice;
+        });
+        });
+        axios.get("/goods").then((result)=> {
+          var res = result.data;
+          this.showList = res.result;
+        });
+      },
+      sortPrice() {
+        if(!this.pricesort) {
+          this.showList = this.showList.sort(function(num1,num2) {
+            return num1.prodcutPrice - num2.prodcutPrice;
+        });
+        }else {
+          this.showList = this.showList.sort(function(num1,num2) {
+            return num2.prodcutPrice - num1.prodcutPrice;
+        });
         }
-      ],
-      priceChecked:'all'
-    }
-  },
-  components: {
-    navbar
-  },
-  mounted: function() {
-    this.getGoodsList();
-  },
-  methods: {
-    getGoodsList() {
-      axios.get("/goods").then((result)=> {
-        var res = result.data;
-        this.goodsList = res.result;
-      });
-    }
+        this.pricesort = !this.pricesort;
+      },
+      sortAli(sortname) {
+        this.sortChecked = sortname;
+        this.priceChecked = 'all';
+        if(sortname === 'all') {
+          this.showList = this.goodsList;
+        }
+         if(sortname === 'ali') {
+          var list = [];
+          for(var i=0;i<this.goodsList.length;i++) { 
+            console.log(this.goodsList[i].prodcutTag)
+            if(this.goodsList[i].prodcutTag === 'ali') {            
+              list.push(this.goodsList[i]);
+            }
+          }
+          this.showList = list;
+        }
+        if(sortname === 'black') {
+          var list = [];
+          for(var i=0;i<this.goodsList.length;i++) { 
+            console.log(this.goodsList[i].prodcutTag)
+            if(this.goodsList[i].prodcutTag === 'black') {            
+              list.push(this.goodsList[i]);
+            }
+          }
+          this.showList = list;
+        }
+      },
+      priceSort(sortname) {
+        this.priceChecked = sortname;
+        this.sortChecked = 'all';
+        if(sortname === 'all') {
+          this.showList = this.goodsList;
+        }else {
+          var list = [];
+          for(var i=0;i<this.goodsList.length;i++) { 
+            if(this.goodsList[i].prodcutPrice<=parseInt(this.priceFilter[sortname].endPrice) && this.goodsList[i].prodcutPrice>=parseInt(this.priceFilter[sortname].startPrice)) {            
+              list.push(this.goodsList[i]);
+            }
+          }
+          this.showList = list;
+        }
+      },
+      add() {
+        if(this.username === '') {
+          alert("请先登录！")
+        }else {
+          this.shopnum++;
+        }      
+      },
+      loginCheck(username,pwd) {
+          //console.log(username,pwd)
+          if(username === "admin" && pwd === '123') {
+            this.username = username;
+            this.pwd  = pwd;
+            this.isLogin = ! this.isLogin;
+            alert("登陆成功！")
+          }else {
+            alert("登陆失败！")
+          }
+      },
+      loginout() {
+          this.username = '';
+          this.pwd  = '';
+          this.isLogin = ! this.isLogin;
+          this.shopnum = 0;
+      }
+    } 
   }
-}
 </script>
 
 <style scoped>
@@ -123,6 +225,14 @@ export default {
     font-size: 14px;
     font-weight: 700;
   }
+  .cur-sort {
+    margin-bottom:8px;
+    font-size: 12px;
+  }
+  .cur-def {
+    color:#ee7a23;
+  }
+
   .goodslist-wrapper {
     padding-top: 20px;
   }

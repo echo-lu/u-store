@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import VueLazyLoad from 'vue-lazyload'
+import VRouter from 'vue-router'
+
 
 Vue.config.productionTip = false
 

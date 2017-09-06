@@ -20,7 +20,7 @@
                 <td>
                   <div class="pic">
                     <span class="icon-check_circle"></span>
-                    <img src="../assets/goodimg/g1.jpg" alt="">
+                    <img src="" alt="">
                     <span class="pic-name">XXX</span>
                   </div>
                 </td>
@@ -43,7 +43,7 @@
                 <td>
                   <div class="pic">
                     <span class="icon-check_circle"></span>
-                    <img src="../assets/goodimg/g2.jpg" alt="">
+                    <img src="" alt="">
                     <span class="pic-name">XXXxxxxxxxxxxx</span>
                   </div>
                 </td>
